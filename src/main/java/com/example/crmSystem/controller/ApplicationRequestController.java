@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -33,11 +34,13 @@ public class ApplicationRequestController {
     }
 
     @PostMapping
-    public String createRequest(@ModelAttribute("requestForm") ApplicationRequest request) {
-        request.setHandled(false); // по умолчанию необработано
+    public String createRequest(@ModelAttribute("requestForm") ApplicationRequest request, RedirectAttributes redirectAttributes) {
+        request.setHandled(false);
         service.createRequest(request);
+        redirectAttributes.addFlashAttribute("successMessage", "Заявка успешно создана!");
         return "redirect:/requests";
     }
+
 
     @GetMapping("/{id}")
     public String getRequestDetails(@PathVariable Long id, Model model) {
@@ -47,6 +50,11 @@ public class ApplicationRequestController {
         return "request-details";
     }
 
+    @PostMapping("/{id}/process")
+    public String processRequest(@PathVariable Long id) {
+        service.markAsProcessed(id);
+        return "redirect:/requests/" + id;
+    }
     @GetMapping("/{id}/edit")
     public String editRequest(@PathVariable Long id, Model model) {
         ApplicationRequest req = service.getRequestById(id);

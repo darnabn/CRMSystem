@@ -23,18 +23,36 @@ public class ApplicationRequestService {
     }
 
     public ApplicationRequest getRequestById(Long id) {
-        return repository.findById(id);
+        return repository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("Заявка с ID " + id + " не найдена")
+        );
     }
+
 
     public ApplicationRequest createRequest(ApplicationRequest request) {
         return repository.save(request);
     }
 
-    public void updateRequest(ApplicationRequest request) {
+    public void markAsProcessed(Long id) {
+        ApplicationRequest request = getRequestById(id); // уже проверяет наличие
+        request.setHandled(true);
         repository.update(request);
     }
 
+
+
+    public void updateRequest(ApplicationRequest request) {
+        if (repository.findById(request.getId()) == null) {
+            throw new IllegalArgumentException("Request with ID " + request.getId() + " not found");
+        }
+        repository.update(request);
+    }
+
+
     public void deleteRequest(Long id) {
+        if (repository.findById(id) == null) {
+            throw new IllegalArgumentException("Request with ID " + id + " not found");
+        }
         repository.deleteById(id);
     }
 }

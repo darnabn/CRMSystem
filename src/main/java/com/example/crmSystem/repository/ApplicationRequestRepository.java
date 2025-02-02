@@ -3,6 +3,7 @@ package com.example.crmSystem.repository;
 import com.example.crmSystem.entity.ApplicationRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ApplicationRequestRepository {
 
@@ -10,9 +11,10 @@ public interface ApplicationRequestRepository {
 
     List<ApplicationRequest> findAll();
 
-    ApplicationRequest findById(Long id);
+    Optional<ApplicationRequest> findById(Long id);
 
     void update(ApplicationRequest request);
+    void markAsHandled(Long id);
 
     void deleteById(Long id);
 

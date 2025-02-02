@@ -2,6 +2,7 @@ package com.example.crmSystem.repository;
 
 import com.example.crmSystem.entity.ApplicationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ApplicationRequestRepositoryImpl implements ApplicationRequestRepository {
@@ -53,9 +55,18 @@ public class ApplicationRequestRepositoryImpl implements ApplicationRequestRepos
     }
 
     @Override
-    public ApplicationRequest findById(Long id) {
+    public Optional<ApplicationRequest> findById(Long id) {
         String sql = "SELECT * FROM application_requests WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+    @Override
+    public void markAsHandled(Long id) {
+        String sql = "UPDATE application_requests SET handled = true WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     @Override
