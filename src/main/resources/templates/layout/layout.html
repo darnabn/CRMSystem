@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head layout:fragment="head">
+    <meta charset="UTF-8" />
+    <title th:text="${pageTitle}">CRM</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+
+<body layout:fragment="body">
+<div class="container mt-4">
+    <header>
+        <h1>CRM Система</h1>
+        <nav>
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/requests}">Все заявки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/requests/new}">Добавить заявку</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <hr/>
+
+    <div layout:fragment="content">
+        <!-- Сюда будет подставляться контент из дочерних шаблонов -->
+    </div>
+</div>
+</body>
+</html>
